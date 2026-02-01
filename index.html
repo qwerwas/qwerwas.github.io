@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Introduction</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: url('BG.jpg') no-repeat center center fixed;
+            background-size: cover;
+            font-family: "SimSun", "宋体", serif;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000000;
+            z-index: -1;
+            transition: opacity 0.5s ease;
+            pointer-events: none;
+        }
+
+        body.background-image::before {
+            opacity: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            text-align: center;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            margin: 100px auto 60px;
+        }
+
+        .glow-text {
+            color: #fff;
+            font-size: 3rem;
+            text-shadow:
+                0 0 10px rgba(255, 255, 255, 0.9),
+                0 0 20px rgba(255, 255, 255, 0.7),
+                0 0 30px rgba(255, 255, 255, 0.5),
+                0 0 40px rgba(255, 255, 255, 0.3);
+            margin-bottom: 30px;
+            text-align: left;
+        }
+
+        .divider {
+            border: none;
+            border-top: 3px solid rgba(255, 255, 255, 0.8);
+            margin: 20px 0 70px 0;
+            width: 60%;
+            box-shadow:
+                0 0 12px rgba(255, 255, 255, 1),
+                0 0 24px rgba(255, 255, 255, 0.8),
+                0 0 36px rgba(255, 255, 255, 0.6);
+        }
+
+        .phase-section {
+            min-height: 40vh;
+            padding: 20px 40px;
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-bottom: 80px;
+        }
+
+        .phase-section .container {
+            margin: 0;
+            min-height: 300px;
+            height: 300px;
+            width: 1200px;
+        }
+
+        .phase-title {
+            color: #fff;
+            font-size: 2.5rem;
+            text-shadow:
+                0 0 10px rgba(255, 255, 255, 0.9),
+                0 0 20px rgba(255, 255, 255, 0.7),
+                0 0 30px rgba(255, 255, 255, 0.5),
+                0 0 40px rgba(255, 255, 255, 0.3);
+            margin-bottom: 30px;
+            text-align: left;
+            align-self: flex-start;
+        }
+
+        .content {
+            color: #fff;
+            font-size: 1.2rem;
+            line-height: 1.8;
+            text-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
+            margin-bottom: 20px;
+        }
+
+        .highlight {
+            color: #fff;
+            text-shadow:
+                0 0 8px rgba(255, 255, 255, 0.9),
+                0 0 16px rgba(255, 255, 255, 0.7),
+                0 0 24px rgba(255, 255, 255, 0.5);
+            font-weight: bold;
+        }
+
+        .music-btn, .nav-btn {
+            position: fixed;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.3s ease;
+            z-index: 1000;
+            overflow: hidden;
+        }
+
+        .music-btn {
+            top: 20px;
+            right: 20px;
+        }
+
+        .nav-btn {
+            top: 90px;
+            right: 20px;
+        }
+
+        .music-btn:hover, .nav-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+            box-shadow:
+                0 0 10px rgba(255, 255, 255, 0.6),
+                0 0 20px rgba(255, 255, 255, 0.4),
+                0 0 30px rgba(255, 255, 255, 0.2);
+        }
+
+        .music-btn svg, .nav-btn svg {
+            width: 28px;
+            height: 28px;
+            fill: #fff;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.4);
+            transform: scale(0);
+            animation: ripple-animation 0.6s linear;
+            pointer-events: none;
+        }
+
+        @keyframes ripple-animation {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+
+        .music-label {
+            position: fixed;
+            top: 32px;
+            right: 95px;
+            color: #fff;
+            font-size: 20px;
+            font-family: "SimSun", "宋体", serif;
+            text-shadow:
+                0 0 8px rgba(255, 255, 255, 0.9),
+                0 0 16px rgba(255, 255, 255, 0.7),
+                0 0 24px rgba(255, 255, 255, 0.5);
+            z-index: 1;
+            white-space: nowrap;
+            opacity: 1;
+            transition: opacity 0.5s ease;
+        }
+
+        .music-label.hidden {
+            opacity: 0;
+        }
+
+        .nav-label {
+            position: fixed;
+            top: 102px;
+            right: 95px;
+            color: #fff;
+            font-size: 20px;
+            font-family: "SimSun", "宋体", serif;
+            text-shadow:
+                0 0 8px rgba(255, 255, 255, 0.9),
+                0 0 16px rgba(255, 255, 255, 0.7),
+                0 0 24px rgba(255, 255, 255, 0.5);
+            z-index: 1;
+            white-space: nowrap;
+            opacity: 1;
+            transition: opacity 0.5s ease;
+        }
+
+        .nav-label.hidden {
+            opacity: 0;
+        }
+
+        .footer-container {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 20px;
+        }
+
+        .footer-content {
+            max-width: 800px;
+            padding: 60px 40px;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            text-align: center;
+        }
+
+        .footer-text {
+            color: #fff;
+            font-size: 1.2rem;
+            line-height: 2;
+            margin-bottom: 20px;
+            font-family: "SimSun", "宋体", serif;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+
+        .footer-text:last-child {
+            margin-bottom: 0;
+        }
+
+        .watermark {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 14px;
+            font-family: "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
+            z-index: 1;
+            text-shadow:
+                0 0 8px rgba(255, 255, 255, 0.8),
+                0 0 16px rgba(255, 255, 255, 0.6),
+                0 0 24px rgba(255, 255, 255, 0.4);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .watermark.visible {
+            opacity: 1;
+        }
+
+        .nav-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            z-index: 999;
+            padding: 40px;
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .nav-modal.active {
+            display: flex;
+            flex-direction: column;
+            opacity: 1;
+        }
+
+        .nav-close {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 40px;
+            height: 40px;
+            color: #fff;
+            font-size: 36px;
+            cursor: pointer;
+            text-shadow:
+                0 0 8px rgba(255, 255, 255, 0.9),
+                0 0 16px rgba(255, 255, 255, 0.7),
+                0 0 24px rgba(255, 255, 255, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: scale(0.8);
+        }
+
+        .nav-modal.active .nav-close {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .nav-close:hover {
+            background: rgba(255, 255, 255, 0.25);
+            box-shadow:
+                0 0 10px rgba(255, 255, 255, 0.6),
+                0 0 20px rgba(255, 255, 255, 0.4);
+        }
+
+        .nav-item {
+            color: #fff;
+            font-size: 24px;
+            padding: 20px 30px;
+            cursor: pointer;
+            text-shadow:
+                0 0 10px rgba(255, 255, 255, 0.9),
+                0 0 20px rgba(255, 255, 255, 0.7),
+                0 0 30px rgba(255, 255, 255, 0.5);
+            border-radius: 15px;
+            transition: all 0.3s ease;
+            margin-bottom: 15px;
+            font-family: "SimSun", "宋体", serif;
+            align-self: center;
+            width: 80%;
+            max-width: 400px;
+            text-align: center;
+            opacity: 0;
+            transform: translateY(20px);
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .nav-modal.active .nav-item {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .nav-modal.active .nav-item:nth-child(2) {
+            transition-delay: 0.1s;
+        }
+        .nav-modal.active .nav-item:nth-child(3) {
+            transition-delay: 0.2s;
+        }
+        .nav-modal.active .nav-item:nth-child(4) {
+            transition-delay: 0.3s;
+        }
+        .nav-modal.active .nav-item:nth-child(5) {
+            transition-delay: 0.4s;
+        }
+        .nav-modal.active .nav-item:nth-child(6) {
+            transition-delay: 0.5s;
+        }
+        .nav-modal.active .nav-item:nth-child(7) {
+            transition-delay: 0.6s;
+        }
+
+        .nav-item:hover {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            text-shadow:
+                0 0 12px rgba(255, 255, 255, 1),
+                0 0 24px rgba(255, 255, 255, 0.8),
+                0 0 36px rgba(255, 255, 255, 0.6);
+            box-shadow:
+                0 4px 25px rgba(0, 0, 0, 0.4),
+                0 0 15px rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-item:last-child {
+            margin-bottom: 0;
+        }
+
+        @media (max-width: 600px) {
+            .glow-text {
+                font-size: 2rem;
+            }
+            .phase-title {
+                font-size: 1.8rem;
+            }
+            .content {
+                font-size: 1rem;
+            }
+            .music-btn, .nav-btn {
+                width: 50px;
+                height: 50px;
+            }
+            .music-btn {
+                top: 15px;
+                right: 15px;
+            }
+            .nav-btn {
+                top: 75px;
+                right: 15px;
+            }
+            .music-btn svg, .nav-btn svg {
+                width: 24px;
+                height: 24px;
+            }
+            .nav-modal {
+                padding: 20px;
+            }
+            .nav-item {
+                font-size: 20px;
+                padding: 15px 20px;
+                width: 90%;
+            }
+            .nav-close {
+                width: 35px;
+                height: 35px;
+                font-size: 30px;
+                top: 15px;
+                left: 15px;
+            }
+            .music-label {
+                top: 26px;
+                right: 80px;
+                font-size: 14px;
+                line-height: 1.4;
+            }
+            .nav-label {
+                top: 86px;
+                right: 80px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <audio id="bgMusic" loop>
+        <source src="ReI.wav" type="audio/wav">
+    </audio>
+
+    <button class="music-btn" id="musicBtn">
+        <svg id="playIcon" viewBox="0 0 24 24">
+            <path d="M8 5v14l11-7z"/>
+        </svg>
+        <svg id="pauseIcon" viewBox="0 0 24 24" style="display: none;">
+            <path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z"/>
+        </svg>
+    </button>
+
+    <button class="nav-btn" id="navBtn">
+        <svg viewBox="0 0 24 24">
+            <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+        </svg>
+    </button>
+
+    <span class="music-label">这里有一首安静的曲子<br>
+        THE ORAL CIGARETTES-ReI<br>
+    </span>
+
+    <span class="nav-label">
+        
+    </span>
+
+    <div class="nav-modal" id="navModal">
+        <div class="nav-close" id="navClose">×</div>
+        <div class="nav-item" data-target="introduction">Introduction</div>
+        <div class="nav-item" data-target="phase01">Phase 01</div>
+        <div class="nav-item" data-target="phase02">Phase 02</div>
+        <div class="nav-item" data-target="phase03">Phase 03</div>
+        <div class="nav-item" data-target="phase04">Phase 04</div>
+        <div class="nav-item" data-target="phase05">Phase 05</div>
+    </div>
+
+    <div class="container" id="introduction">
+        <h1 class="glow-text">Introduction</h1>
+        <p class="content">
+            To<span class="highlight">  tongong</span>。
+            <br><br>
+            犹豫了很久，还是想用这种方式和你聊聊，因为有些话，<span class="highlight">写下来</span>更能表达清楚。
+            <br><br>
+            这不是一个追求的工具，而是一份<span class="highlight">为友谊而生的礼物。</span>
+            <br><br>
+            希望我简陋的制作可以为你带来一些…<span class="highlight">舒适</span>。<br>
+            点开这个页面的你，不用有任何负担,不用觉得尴尬。<br>
+正如这个域名 <span class="highlight"> srytotong.xyz</span> 一样，sorry to tongong.<br>
+已经很长时间了，我鼓起勇气做了这个，表达<span class="highlight">对你的歉意</span>。<br>
+            希望你能喜欢这个小小的页面，我设计了intro和五个phase,以及小小的祝福。<br>
+            <span class="highlight">希望你能读完。谢谢你的陪伴和支持。</span><br>
+           
+        </p>
+        <div style="height: 80px;"></div>
+
+        <h2 class="phase-title" id="phase01">Phase 01</h2>
+        <hr class="divider">
+        <p class="content">
+         
+            <br><br>
+            还记得那些<span class="highlight">与你共度的快乐的时光</span>。
+            <br><br>
+          第一次聊起音游，第一次聊起音乐，第一次聊起日常...<br><br>
+          那次彻夜长谈的快乐，我到现在都记得。<br><br>
+          这些美好的朋友间的回忆是<span class="highlight">坚实且被深深珍视的</span>。<br><br>
+
+          いつもの空気<br>
+          <i>熟悉的空气</i><br>
+          変わらない景色<br>
+          <i>不变的风景</i><br>
+          ...<br>
+
+        </p>
+
+        <div style="height: 80px;"></div>
+
+        <h2 class="phase-title" id="phase02">Phase 02</h2>
+        <hr class="divider">
+        <p class="content">
+            <span class="highlight">感谢你</span>以一位知己的身份和我聊这么久天。
+            <br><br>
+            我们有共同的话题，有共同的爱好，有共同的兴趣。<br><br>
+            你总是那么耐心地听我说话，给我建议<br><br>
+            我却做出了如此错误的行为。<br><br>
+            对不起呀，给你的生活带来了困扰。<br><br>
+           
+            泣いて笑ったり<br>
+            <i>哭过也笑过</i><br>
+            起こった全てがだんだんぼやけてく<br>
+            <i>所发生的一切渐渐变得模糊</i><br>
+            ...<br>
+            <br><br>
+            
+        </p>
+
+        <div style="height: 80px;"></div>
+
+        <h2 class="phase-title" id="phase03">Phase 03</h2>
+        <hr class="divider">
+        <p class="content">
+           比起 <span class="highlight">歉意</span> ，我更多的是<span class="highlight"> 感激</span>。
+            <br><br>
+            曾经的经历，<span class="highlight">仿佛发生在昨天般历历在目</span>
+            <br><br>
+            发自内心展露笑容，这无比珍重的瞬间！<br><br>
+            <span class="highlight">如此珍贵的每日 耀眼地闪耀的每日！！</span><br><br>
+            即使过了1年 2年 3年 100年也不会厌倦!!<br><br>
+
+            好きなもの大事なもの<br>
+            <I>喜欢的东西 重要的东西</I><br>
+            夢中になれることは<br>
+           <I> 让人全身心投入的事情</I><br>
+            ...<br>
+
+
+
+
+
+        </p>
+
+        <div style="height: 80px;"></div>
+
+        <h2 class="phase-title" id="phase04">Phase 04</h2>
+        <hr class="divider">
+        <p class="content">
+            <span class="highlight">从过去，到未来</span>。
+            <br> <br>
+            <span class="highlight">从问题，到答案</span>。<br> <br>
+            我一直在做出<span class="highlight">努力</span>，寻找解决办法。
+            <br><br>
+            我相信，<span class="highlight">「绝对」这种东西是不存在的。</span><br><br>
+            
+            人生如梦弹指间，冒险总是会超乎想象
+            <br><br>
+            若将心锁紧闭 故事便永远停滞
+            <br><br>
+            正因如此，我写了这个网页<br><br>
+            我将这个小网页作为信物，展现改过自新的诚挚。<br><br>
+           <span class="highlight"> 我希望我们能再做一次朋友。</span><br><br>
+
+          みらいを願い続けていよう<br>
+<i>继续怀抱对未来的祈愿</i><br>
+そう何度でも立ち上がれるよ　ここから<br>
+<i>是的，无论多少次都可以从这里站起来</i><br>
+きっと未だ来たことない場所まで<br>
+<i>一定会一直到从未到达过的地方</i><br>
+みらいが続くと信じてる<br>
+<i>相信未来还会继续</i><br>
+
+
+        
+
+        </p>
+
+        <div style="height: 80px;"></div>
+
+        <h2 class="phase-title" id="phase05">Phase 05 </h2>
+        <hr class="divider">
+        <p class="content">
+            我在OSU! OWC2024 半决赛原创曲<br>
+            <span class="highlight"><i> Minstrel - today is the day</i></span>中找到了这些日语歌词。<br><br>
+
+            最后，分享这两句。<br><br>
+声を響かせて<br>
+<i>将声音传递出去</i><br>
+心を重ねて<br>
+<i>与心灵交汇</i><br><br>
+
+
+            <span class="highlight">today is the day！</span><br><br>
+
+
+           extra: 为什么是<span class="highlight">ReI</span>
+            <br><br>
+            <span class="highlight">ReI</span>的歌词给了我很多启发，让我想起了很多，
+            所以我选择这首歌作为背景音乐。<br>
+            钢琴演奏的ReI有种淡淡的哀伤，却又充满力量，<br>
+            让我感受到一种想要改变现状的冲动。<br>
+             —————————————————  <br>
+            ああ、きっとあの日々を思い返すだろう<br>
+<i>  啊 一定还在回想那些日子吧</i><br>
+視界に広がった景色を変えていきたい<br>
+<i> 我想改变眼前的风景</i> <br>
+
+明日に残したい1ものだと<br>
+<i>我要在明天留下些什么 </i><br>      
+          
+             —————————————————<br>
+             这正是我的心声，我很想改变。<br>
+             珍惜<span class="highlight"> 美好的每一天</span>，<span class="highlight">珍惜与他人的相处时光</span>。<br>
+             <br>
+            “ 初めて自分以外の誰かのために曲を書けた気がしました。<br>
+そういう初めての感情を持てたからこそ。<br>ハードルをなくしてみんなに聞いて貰いたいです。”<br>
+<i>我觉得自己第一次能为<span class="highlight">别人</span>写歌，而非为自己。</i><br>
+<i>那是因为我能有那样的第一种感觉。 我想消除障碍，让每个人都能倾听。</i><br>
+<span class="highlight"> ————山中拓也（THE ORAL CIGARETTES）</span><br><br>
+            
+        </p>
+    </div>
+
+    <div class="footer-container" id="footer">
+        <div class="footer-content">
+            <p class="footer-text">
+                To <span class="highlight">tongong</span>
+            </p>
+            <p class="footer-text">
+                感谢你能看到这里，希望你喜欢这个页面。谢谢。
+            </p>
+            <p class="footer-text">
+                在最后，忠心祝愿你 <span class="highlight">天天开心，事事顺利!</span><br><span class="highlight">画出更多优秀的作品，音游技术不断飞升!</span><br>
+               <br> <span class="highlight">愿你今天有个好心情。</span><br> <br>                
+                               <i><span class="highlight">-来自111</span></i>
+                                 
+            </p>
+        </div>
+    </div>
+
+    <div class="watermark">111/Foworum works</div>
+
+    <script>
+        const bgMusic = document.getElementById('bgMusic');
+        const musicBtn = document.getElementById('musicBtn');
+        const navBtn = document.getElementById('navBtn');
+        const navModal = document.getElementById('navModal');
+        const navClose = document.getElementById('navClose');
+        const playIcon = document.getElementById('playIcon');
+        const pauseIcon = document.getElementById('pauseIcon');
+        const navItems = document.querySelectorAll('.nav-item');
+        const musicLabel = document.querySelector('.music-label');
+        const navLabel = document.querySelector('.nav-label');
+
+        // 创建波纹效果
+        function createRipple(event) {
+            const button = event.currentTarget;
+            const ripple = document.createElement('span');
+            const rect = button.getBoundingClientRect();
+            const size = Math.max(rect.width, rect.height);
+
+            ripple.classList.add('ripple');
+            ripple.style.width = ripple.style.height = `${size}px`;
+            ripple.style.left = `${event.clientX - rect.left - size / 2}px`;
+            ripple.style.top = `${event.clientY - rect.top - size / 2}px`;
+
+            button.appendChild(ripple);
+
+            setTimeout(() => {
+                ripple.remove();
+            }, 600);
+        }
+
+        // 切换播放/暂停
+        function toggleMusic() {
+            if (bgMusic.paused) {
+                bgMusic.play();
+                playIcon.style.display = 'none';
+                pauseIcon.style.display = 'block';
+            } else {
+                bgMusic.pause();
+                playIcon.style.display = 'block';
+                pauseIcon.style.display = 'none';
+            }
+        }
+
+        // 切换导航菜单
+        function toggleNavModal() {
+            navModal.classList.toggle('active');
+        }
+
+        // 关闭导航菜单
+        function closeNavModal() {
+            navModal.classList.remove('active');
+        }
+
+        // 滚动到指定区域
+        function scrollToSection(targetId) {
+            if (targetId === 'introduction') {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            } else {
+                const target = document.getElementById(targetId);
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            }
+            navModal.classList.remove('active');
+        }
+
+        // 点击外部关闭导航菜单
+        document.addEventListener('click', function(event) {
+            if (!navBtn.contains(event.target) && !navModal.contains(event.target)) {
+                navModal.classList.remove('active');
+            }
+        });
+
+        // 滚动时隐藏/显示标签文字
+        let lastScrollTop = 0;
+        window.addEventListener('scroll', function() {
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            if (scrollTop > 75) {
+                musicLabel.classList.add('hidden');
+                navLabel.classList.add('hidden');
+            } else {
+                musicLabel.classList.remove('hidden');
+                navLabel.classList.remove('hidden');
+            }
+            lastScrollTop = scrollTop;
+        });
+
+        // 滚动到底部切换背景
+        window.addEventListener('scroll', function() {
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            const windowHeight = window.innerHeight;
+            const documentHeight = document.documentElement.scrollHeight;
+            const scrollBottom = scrollTop + windowHeight;
+            const watermark = document.querySelector('.watermark');
+
+            if (scrollBottom >= documentHeight - 50) {
+                document.body.classList.add('background-image');
+                watermark.classList.add('visible');
+            } else {
+                document.body.classList.remove('background-image');
+                watermark.classList.remove('visible');
+            }
+        });
+
+        musicBtn.addEventListener('click', function(event) {
+            createRipple(event);
+            toggleMusic();
+        });
+
+        navBtn.addEventListener('click', function(event) {
+            createRipple(event);
+            toggleNavModal();
+        });
+
+        navClose.addEventListener('click', closeNavModal);
+
+        navItems.forEach(item => {
+            item.addEventListener('click', function() {
+                const target = this.getAttribute('data-target');
+                scrollToSection(target);
+            });
+        });
+    </script>
+</body>
+</html>
