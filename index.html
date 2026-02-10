@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Introduction</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: url('BG.jpg') no-repeat center center fixed;
+            background-size: cover;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", Arial, sans-serif;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('toybot.jpg') no-repeat center center fixed;
+            background-size: cover;
+            z-index: -1;
+            transition: opacity 0.5s ease;
+            pointer-events: none;
+        }
+
+        body.background-image::before {
+            opacity: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            text-align: center;
+            padding: 40px;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            margin: 100px auto 60px;
+        }
+
+        .glow-text {
+            color: #fff;
+            font-size: 3rem;
+            text-shadow:
+                0 0 10px rgba(255, 255, 255, 0.9),
+                0 0 20px rgba(255, 255, 255, 0.7),
+                0 0 30px rgba(255, 255, 255, 0.5),
+                0 0 40px rgba(255, 255, 255, 0.3);
+            margin-bottom: 30px;
+            text-align: left;
+        }
+
+        .divider {
+            border: none;
+            border-top: 3px solid rgba(255, 255, 255, 0.8);
+            margin: 20px 0 70px 0;
+            width: 60%;
+            box-shadow:
+                0 0 12px rgba(255, 255, 255, 1),
+                0 0 24px rgba(255, 255, 255, 0.8),
+                0 0 36px rgba(255, 255, 255, 0.6);
+        }
+
+        .phase-section {
+            min-height: 40vh;
+            padding: 20px 40px;
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-bottom: 80px;
+        }
+
+        .phase-section .container {
+            margin: 0;
+            min-height: 300px;
+            height: 300px;
+            width: 1200px;
+        }
+
+        .phase-title {
+            color: #fff;
+            font-size: 2.5rem;
+            text-shadow:
+                0 0 10px rgba(255, 255, 255, 0.9),
+                0 0 20px rgba(255, 255, 255, 0.7),
+                0 0 30px rgba(255, 255, 255, 0.5),
+                0 0 40px rgba(255, 255, 255, 0.3);
+            margin-bottom: 30px;
+            text-align: left;
+            align-self: flex-start;
+        }
+
+        .content {
+            color: #fff;
+            font-size: 1.2rem;
+            line-height: 1.8;
+            text-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .highlight {
+            color: #fff;
+            text-shadow:
+                0 0 8px rgba(255, 255, 255, 0.9),
+                0 0 16px rgba(255, 255, 255, 0.7),
+                0 0 24px rgba(255, 255, 255, 0.5);
+            font-weight: bold;
+        }
+
+        .music-btn, .nav-btn {
+            position: fixed;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.3s ease;
+            z-index: 1000;
+            overflow: hidden;
+        }
+
+        .music-btn {
+            top: 20px;
+            right: 20px;
+        }
+
+        .nav-btn {
+            top: 90px;
+            right: 20px;
+        }
+
+        .music-btn:hover, .nav-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+            box-shadow:
+                0 0 10px rgba(255, 255, 255, 0.6),
+                0 0 20px rgba(255, 255, 255, 0.4),
+                0 0 30px rgba(255, 255, 255, 0.2);
+        }
+
+        .music-btn svg, .nav-btn svg {
+            width: 28px;
+            height: 28px;
+            fill: #fff;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.4);
+            transform: scale(0);
+            animation: ripple-animation 0.6s linear;
+            pointer-events: none;
+        }
+
+        @keyframes ripple-animation {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+
+        .music-label {
+            position: fixed;
+            top: 32px;
+            right: 95px;
+            color: #fff;
+            font-size: 20px;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", Arial, sans-serif;
+            text-shadow:
+                0 0 8px rgba(255, 255, 255, 0.9),
+                0 0 16px rgba(255, 255, 255, 0.7),
+                0 0 24px rgba(255, 255, 255, 0.5);
+            z-index: 1;
+            white-space: nowrap;
+            opacity: 1;
+            transition: opacity 0.5s ease;
+        }
+
+        .music-label.hidden {
+            opacity: 0;
+        }
+
+        .nav-label {
+            position: fixed;
+            top: 102px;
+            right: 95px;
+            color: #fff;
+            font-size: 20px;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", Arial, sans-serif;
+            text-shadow:
+                0 0 8px rgba(255, 255, 255, 0.9),
+                0 0 16px rgba(255, 255, 255, 0.7),
+                0 0 24px rgba(255, 255, 255, 0.5);
+            z-index: 1;
+            white-space: nowrap;
+            opacity: 1;
+            transition: opacity 0.5s ease;
+        }
+
+        .nav-label.hidden {
+            opacity: 0;
+        }
+
+        .footer-container {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 20px;
+        }
+
+        .footer-content {
+            max-width: 800px;
+            padding: 60px 40px;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            text-align: center;
+        }
+
+        .footer-text {
+            color: #fff;
+            font-size: 1.2rem;
+            line-height: 2;
+            margin-bottom: 20px;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", Arial, sans-serif;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+            text-align: left;
+        }
+
+        .footer-text:last-child {
+            margin-bottom: 0;
+        }
+
+        .watermark {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 14px;
+            font-family: "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
+            z-index: 1;
+            text-shadow:
+                0 0 8px rgba(255, 255, 255, 0.8),
+                0 0 16px rgba(255, 255, 255, 0.6),
+                0 0 24px rgba(255, 255, 255, 0.4);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .watermark.visible {
+            opacity: 1;
+        }
+
+        .nav-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            z-index: 1001;
+            padding: 40px;
+            opacity: 0;
+            transform: scale(0.9);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        .nav-modal.active {
+            display: flex;
+            flex-direction: column;
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .nav-close {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 40px;
+            height: 40px;
+            color: #fff;
+            font-size: 36px;
+            cursor: pointer;
+            text-shadow:
+                0 0 8px rgba(255, 255, 255, 0.9),
+                0 0 16px rgba(255, 255, 255, 0.7),
+                0 0 24px rgba(255, 255, 255, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: scale(0.8);
+        }
+
+        .nav-modal.active .nav-close {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .nav-close:hover {
+            background: rgba(255, 255, 255, 0.25);
+            box-shadow:
+                0 0 10px rgba(255, 255, 255, 0.6),
+                0 0 20px rgba(255, 255, 255, 0.4);
+        }
+
+        .nav-item {
+            color: #fff;
+            font-size: 24px;
+            padding: 20px 30px;
+            cursor: pointer;
+            text-shadow:
+                0 0 10px rgba(255, 255, 255, 0.9),
+                0 0 20px rgba(255, 255, 255, 0.7),
+                0 0 30px rgba(255, 255, 255, 0.5);
+            border-radius: 15px;
+            transition: all 0.3s ease;
+            margin-bottom: 15px;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", Arial, sans-serif;
+            align-self: center;
+            width: 80%;
+            max-width: 400px;
+            text-align: left;
+            opacity: 0;
+            transform: translateY(20px);
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-modal.active .nav-item {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .nav-modal.active .nav-item:nth-child(2) {
+            transition-delay: 0.1s;
+        }
+        .nav-modal.active .nav-item:nth-child(3) {
+            transition-delay: 0.2s;
+        }
+
+        .nav-item:hover {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            text-shadow:
+                0 0 12px rgba(255, 255, 255, 1),
+                0 0 24px rgba(255, 255, 255, 0.8),
+                0 0 36px rgba(255, 255, 255, 0.6);
+            box-shadow:
+                0 4px 25px rgba(0, 0, 0, 0.4),
+                0 0 15px rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-item:last-child {
+            margin-bottom: 0;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                margin-top: 140px;
+                padding-top: 40px;
+            }
+            .glow-text {
+                font-size: 2rem;
+            }
+            .phase-title {
+                font-size: 1.8rem;
+            }
+            .content {
+                font-size: 1rem;
+            }
+            .music-btn, .nav-btn {
+                width: 50px;
+                height: 50px;
+            }
+            .music-btn {
+                top: 15px;
+                right: 15px;
+            }
+            .nav-btn {
+                top: 75px;
+                right: 15px;
+            }
+            .music-btn svg, .nav-btn svg {
+                width: 24px;
+                height: 24px;
+            }
+            .nav-modal {
+                padding: 20px;
+                padding-top: 80px;
+            }
+            .nav-item {
+                font-size: 20px;
+                padding: 15px 20px;
+                width: 90%;
+            }
+            .nav-close {
+                width: 40px;
+                height: 40px;
+                font-size: 28px;
+                line-height: 1;
+                top: 15px;
+                left: 15px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+            .music-label {
+                top: 26px;
+                right: 80px;
+                font-size: 14px;
+                line-height: 1.4;
+            }
+            .nav-label {
+                top: 86px;
+                right: 80px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <audio id="bgMusic" loop>
+        <source src="https://111cdc.oss-cn-beijing.aliyuncs.com/1.mp3?Expires=1770712957&OSSAccessKeyId=TMP.3Kr6Rj7sn4DyZeuccY897xMdahVYnoCiox3hfWRnB1HnXueJYdbXiAHWb4my1jdx8QZSzJNkx9z3ZfYc5qBf2dcTPy3Jc5&Signature=h3hhYiO3n%2Fh2fvkbGsyQmC5tplk%3D" type="audio/mpeg">
+    </audio>
+
+    <button class="music-btn" id="musicBtn">
+        <svg id="playIcon" viewBox="0 0 24 24">
+            <path d="M8 5v14l11-7z"/>
+        </svg>
+        <svg id="pauseIcon" viewBox="0 0 24 24" style="display: none;">
+            <path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z"/>
+        </svg>
+    </button>
+
+    <button class="nav-btn" id="navBtn">
+        <svg viewBox="0 0 24 24">
+            <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+        </svg>
+    </button>
+
+    <span class="music-label">点开听听？<br>
+        Wings of Courage -空を超えて- 
+<br>
+    </span>
+
+    <span class="nav-label">
+        
+    </span>
+
+    <div class="nav-modal" id="navModal">
+        <div class="nav-close" id="navClose">×</div>
+        <div class="nav-item" data-target="简介">简介</div>
+        <div class="nav-item" data-target="一些话">一些话</div>
+        <div class="nav-item" data-target="footer">2</div>
+    </div>
+
+    <div class="container" id="简介">
+        <h1 class="glow-text">简介</h1>
+        <p class="content">
+             1111111，你好啊<span class="highlight">  tongong</span>。
+            <br><br>
+            嗯对，你现在可能会想:“我草，这个傻逼捣鼓了个啥啊？”，嗯是的是的,正常。
+            <br><br>
+            对不起对不起😭😭😭给你的生活造成了困扰，我就是有病啊😭😭😭
+            <br><br>
+            嗯？嗯。想和好的话必须得有诚意啊，嗯。。实际一点的东西，巧克力什么的可能很难送了。
+            欸，不如做个小网页吧？巧克力人人会买，网页可不是谁都会做的😀😀。
+            我特意整来了<span class="highlight">srytotong.xyz</span>域名<br>
+            <br>
+             正如这个域名一样，<span class="highlight">sorry to tongong</span>给你道歉🤗🙏🙏<br>
+     我本来做完了，但是做的太阴暗了😅🤔，想了想,和好对我来说是好事啊，还是欢快一点的好<br>
+            希望你能看看这个小小的页面，我设计了3部分。<br>
+            要不要打开音乐听听？我从苍彼里翻到了这首(充满希望的？)的钢琴曲，还记得这个苍之彼方的四重奏吗？寒假里试试<br>
+            <span class="highlight">在这里先感谢 你的陪伴和支持，好人啊😭😭</span><br>
+           
+        </p>
+        <div style="height: 80px;"></div>
+
+        <h2 class="phase-title" id="一些话">一些话</h2>
+        <hr class="divider">
+        <p class="content">
+         
+          还记得那些愉快的时光？<br><br>
+          暑假里一起打烤，我又菜又爱玩，你总是那么温柔耐心，那些鼓励我还记得，这是多么好啊😭😭
+           <span class="highlight">偶像啊大神啊🥹🥹 非常热忱低调</span>🥹🥹比起技术，这更是重要的，这是多么好啊😭😭<br>
+           现在看来真的是，什么游戏都是有人陪着玩才有意思，音游在我看来也是这样才有趣的！当时一起讨论各种有意思的好玩的东西这是多么好啊😭😭<br><br>
+           还记得那深夜时分享的那一首首音乐吗?夜鹿、三月的幻想、honeyworks、yoasobi.....还有
+           <span class="highlight">上海爱丽丝幻乐团</span>.....能在你的带领下了解东方这是多么好啊😭😭
+           还记得互相分享游戏，<span class="highlight">osu是个好游戏，东方的更是好游戏，你的绘画作品更是神作🙏🙏</span><br><br>
+           还记得三月的幻想的<span class="highlight">粉笔雨</span>？能从你这里了解到这首小众佳作这是多么好啊😭😭还记得东方的彼岸归航？我特别喜欢这首歌的旋律，还记得东风谷早苗的歌？leaf改编成Calamity Fortune
+的那首。那丰富的旋律..好听啊😭😭<span class="highlight">这都是多么好啊😭😭</span>
+           <span class="highlight">能认识东方project这个伟大的制作，能在你的带领下听到那么多充满故事的东方音乐，这些都是多么好啊😭😭</span><br><br>
+           这里引用轻音的<span class="highlight">kira kira days</span>的歌词<br><br>
+           <span class="highlight" style="font-size: 20px;">このままでいいよ このままがいいよ</span><br>
+   <i><span style="font-family: '宋体';" >这样子就可以了呦 保持下去就行了</span> </i><br>
+<span class="highlight" style="font-size: 23px;">宝物たからものの日々ひび まばゆく光ひかる日々ひび</span><br>
+<i><span style="font-family: '宋体';" >如此珍贵的每日 耀眼地闪耀的每日</span> </i><br>
+<span class="highlight" style="font-size: 23px;">宝物たからものの日々ひび  一緒いっしょに泣なき、笑わらう日々ひび</span><br>
+<i><span style="font-family: '宋体';" >如此珍贵的每日 一起欢笑流泪的每日</span> </i><br>
+<span class="highlight" style="font-size: 23px;">ハートの五線譜ごせんふに書かいてある 無数むすうのリフマーク</span><br>
+<i><span style="font-family: '宋体';" >在心中的五线谱写着的是 无数的即兴重复段记号</span> </i><br><br>
+当时一起欢乐聊天交流的时光，在我看来正如歌词一样！<br>
+<span class="highlight">即使过了1年 2年 3年 100年也不会厌倦！！</span>
+
+        </p>
+
+        <p class="content">
+            正如歌词，我觉得我们之间的关系是非常珍贵的，虽然有时候我可能会犯一些错误干的事很唐很傻逼😇😇😅😅，一想起来之前干的傻逼事就想找个楼跳了😅😅<br>
+            <span class="highlight">但我真的很感激你一直以来的陪伴和支持，知己啊。😭😭🤗🤗。这是多么好啊😭😭</span><br><br>
+
+        </p>
+
+        <div style="height: 80px;"></div>
+
+        <p class="content">谢谢陪伴，你真的是一个很好很好的人。😭🙏我错了😭😭我是傻逼啊我是傻逼啊😭😭对不起🙏🙏我的傻逼行为影响到了你我不是人类啊😭🙏我错了我错了很希望你不要屏蔽我😭🙏<br>
+            还记得osu吗，我爱玩osu的一个原因就是游戏里有超级超级多的歌，里面一些歌就像是为我量身定制的礼物一样😊前年osu半决赛的歌我觉得便是其中一首，不但是青春摇滚的旋律，更是超级棒的歌词<br><br>
+            <span class="highlight">Minstrel - today is the day</span><br><br>
+            <span class="highlight" style="font-size: 23px;">久しぶりのはずでも尽きない話題</span><br>
+            <i><span style="font-family: '宋体';" >即使是久别重逢的话题也聊不完</span> </i><br>
+            <span class="highlight" style="font-size: 23px;">変わらないお互い</span><br>
+             <i><span style="font-family: '宋体';" >我们都还是老样子</span> </i><br>
+            <span class="highlight" style="font-size: 23px;">声を響かせて</span><br>
+             <i><span style="font-family: '宋体';" >将声音传递出去</span> </i><br>
+            <span class="highlight" style="font-size: 23px;">心を重ねて</span><br>
+             <i><span style="font-family: '宋体';" >让心灵交汇</span> </i><br><br>
+
+这写点正是我的期望!当然我这么写可能有点恶心了。🤔🤗<br>
+
+
+
+
+            
+            
+            
+            
+            
+            
+            
+            
+            好啦，先不说这些了，下面是一些祝福，和另一些想说的话。<br>
+
+        </p>
+    </div>
+
+    <div class="footer-container" id="footer">
+        <div class="footer-content">
+            <p class="footer-text">
+                <span class="highlight">感谢你能看到这里，真的很感谢你能看到这里😭。🙏🙏,</span>
+            </p>
+            <p class="footer-text">
+                1111111，这个界面我设计成写些祝福吧。<br>
+                祝tongong<br>
+                 <span class="highlight">寒假快乐，新年快乐口牙</span>（跨年的时候我就想好了要法这个了，虽然现在才写出来😅🤗。）<br>
+                 <span class="highlight">音游技术越来越厉害！</span> （如果你愿意我很希望能继续打多人🙏🙏对了什么时候想起来osu了回来看看可否）<br>
+                  <span class="highlight">画出更多优秀的作品！成为大up主！</span>（是忙于学习没空画画吗。什么时候更新了我再来三连！）<br>   
+
+ 
+                 最后，<span class="highlight">生活顺利，天天开心，希望你今天能有个好心情！</span><br><br> 
+
+                 <p style="font-size: x-small;" class="footer-text"
+>当然我也有一个小愿望，我希望可以和好</p>                 
+                 <p style="text-align: right;"><span class="highlight">来自111 </span></p>
+            </p>
+        </div>
+    </div>
+
+    <div class="watermark">111/Foworum works</div>
+
+    <script>
+        const bgMusic = document.getElementById('bgMusic');
+        const musicBtn = document.getElementById('musicBtn');
+        const navBtn = document.getElementById('navBtn');
+        const navModal = document.getElementById('navModal');
+        const navClose = document.getElementById('navClose');
+        const playIcon = document.getElementById('playIcon');
+        const pauseIcon = document.getElementById('pauseIcon');
+        const navItems = document.querySelectorAll('.nav-item');
+        const musicLabel = document.querySelector('.music-label');
+        const navLabel = document.querySelector('.nav-label');
+
+        // 创建波纹效果
+        function createRipple(event) {
+            const button = event.currentTarget;
+            const ripple = document.createElement('span');
+            const rect = button.getBoundingClientRect();
+            const size = Math.max(rect.width, rect.height);
+
+            ripple.classList.add('ripple');
+            ripple.style.width = ripple.style.height = `${size}px`;
+            ripple.style.left = `${event.clientX - rect.left - size / 2}px`;
+            ripple.style.top = `${event.clientY - rect.top - size / 2}px`;
+
+            button.appendChild(ripple);
+
+            setTimeout(() => {
+                ripple.remove();
+            }, 600);
+        }
+
+        // 切换播放/暂停
+        function toggleMusic() {
+            if (bgMusic.paused) {
+                bgMusic.play();
+                playIcon.style.display = 'none';
+                pauseIcon.style.display = 'block';
+            } else {
+                bgMusic.pause();
+                playIcon.style.display = 'block';
+                pauseIcon.style.display = 'none';
+            }
+        }
+
+        // 切换导航菜单
+        function toggleNavModal() {
+            navModal.classList.toggle('active');
+        }
+
+        // 关闭导航菜单
+        function closeNavModal() {
+            navModal.classList.remove('active');
+        }
+
+        // 滚动到指定区域
+        function scrollToSection(targetId) {
+            if (targetId === 'introduction' || targetId === '简介') {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            } else if (targetId === 'footer') {
+                const target = document.getElementById(targetId);
+                if (target) {
+                    document.body.classList.add('background-image');
+                    document.querySelector('.watermark').classList.add('visible');
+                    window.scrollTo({
+                        top: target.offsetTop,
+                        behavior: 'smooth'
+                    });
+                }
+            } else {
+                const target = document.getElementById(targetId);
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            }
+            navModal.classList.remove('active');
+        }
+
+        // 点击外部关闭导航菜单
+        document.addEventListener('click', function(event) {
+            if (!navBtn.contains(event.target) && !navModal.contains(event.target)) {
+                navModal.classList.remove('active');
+            }
+        });
+
+        // 滚动时隐藏/显示标签文字
+        let lastScrollTop = 0;
+        window.addEventListener('scroll', function() {
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            if (scrollTop > 75) {
+                musicLabel.classList.add('hidden');
+                navLabel.classList.add('hidden');
+            } else {
+                musicLabel.classList.remove('hidden');
+                navLabel.classList.remove('hidden');
+            }
+            lastScrollTop = scrollTop;
+        });
+
+        // 滚动到第二个毛玻璃容器时切换背景
+        window.addEventListener('scroll', function() {
+            const footer = document.getElementById('footer');
+            const watermark = document.querySelector('.watermark');
+
+            if (footer) {
+                const footerRect = footer.getBoundingClientRect();
+                const windowHeight = window.innerHeight;
+
+                // 当footer进入视口时切换背景
+                if (footerRect.top < windowHeight - 100) {
+                    document.body.classList.add('background-image');
+                    watermark.classList.add('visible');
+                } else {
+                    document.body.classList.remove('background-image');
+                    watermark.classList.remove('visible');
+                }
+            }
+        });
+
+        musicBtn.addEventListener('click', function(event) {
+            createRipple(event);
+            toggleMusic();
+        });
+
+        navBtn.addEventListener('click', function(event) {
+            createRipple(event);
+            toggleNavModal();
+        });
+
+        navClose.addEventListener('click', closeNavModal);
+
+        navItems.forEach(item => {
+            item.addEventListener('click', function(event) {
+                createRipple(event);
+                const target = this.getAttribute('data-target');
+                setTimeout(() => {
+                    scrollToSection(target);
+                }, 200);
+            });
+        });
+    </script>
+</body>
+</html>
